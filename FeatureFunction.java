@@ -8,8 +8,8 @@ public class FeatureFunction {
     public static final int F3 	= 2; // Row transition
     public static final int F4 	= 3; // Col transition
     public static final int F5 	= 4; // Num of holes
-    public static final int F6	= 6; // Empty cells below some filled cell in the same column
-    public static final int F7 	= 5; // Well sum
+    public static final int F6 	= 5; // Well sum
+    public static final int F7	= 6; // Empty cells below some filled cell in the same column
     public static final int F8	= 7; // Average height of columns
 
 
@@ -28,14 +28,14 @@ public class FeatureFunction {
         features[F2] = feature2(s);
         features[F3] = feature3(s);
 
-        int[] ff456 = features456(s);
-        features[F4] = ff456[0];
-        features[F5] = ff456[1];
-        features[F6] = ff456[2];
+        int[] features45Return = features457(s);
+        features[F4] = features45Return[0];
+        features[F5] = features45Return[1];
+        features[F7] = features45Return[2];
 
-        double[] ff78 = features78(s);
-        features[F7] = ff78[0];
-        features[F8] = ff78[1];
+        double[] features6Return = features68(s);
+        features[F6] = features6Return[0];
+        features[F8] = features6Return[1];
         return features;
     }
 
@@ -77,7 +77,7 @@ public class FeatureFunction {
         return transCount;
     }
 
-    public int[] features456(State s) {
+    public int[] features457(State s) {
         int[][] field = s.getField();
         int[] top = s.getTop();
         // Feature 4 result:
@@ -109,13 +109,13 @@ public class FeatureFunction {
         return results;
     }
 
-    public double[] features78(State s) {
+    public double[] features68(State s) {
         int[] top = s.getTop();
         double cumulativeWells = 0, total=0;
 
         for (int i = 0; i < State.COLS; i++){
             total += top[i];
-            // Feature 7:
+            // Feature 6:
             // Make sure array doesn't go out of bounds
             int prevCol = i == 0 ? State.ROWS : top[i - 1];
             int nextCol = i == State.COLS - 1 ? State.ROWS : top[i + 1];
