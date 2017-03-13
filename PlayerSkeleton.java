@@ -10,6 +10,8 @@ public class PlayerSkeleton {
 			-8720.173920864327,
 			-49926.16836221889,
 			-47198.39106032252
+			
+			//feature function
 	};
 	private NextState nextstate;
 
@@ -38,14 +40,14 @@ public class PlayerSkeleton {
 	
 	public static void main(String[] args) {
 		State s = new State();
-		new TFrame(s);
+		//new TFrame(s);
 		PlayerSkeleton p = new PlayerSkeleton();
 		while(!s.hasLost()) {
 			s.makeMove(p.pickMove(s,s.legalMoves()));
-			s.draw();
-			s.drawNext(0,0);
+			/*s.draw();
+			s.drawNext(0,0);*/
 			try {
-				Thread.sleep(300);
+				Thread.sleep(0);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
