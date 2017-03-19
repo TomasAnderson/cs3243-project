@@ -91,9 +91,9 @@ class LSPI {
 	public static final int N_PIECES = 7;
 	public static final int K = 8;
 	private static int LOST_REWARD = -1000000;
-	private static final double GAMMA = 0.9;
+	private static final double GAMMA = 0.9; //can be changed
 	private static final double EPS = 0.0005;
-	private static final double P = 1.0/7;
+	private static final double P = 1.0/N_PIECES;
 	private static final String PROCESS = "/20";
 	
 
@@ -121,7 +121,7 @@ class LSPI {
 		
 	}
 	
-	private double getReward(NextState ns, NextState nns, int action) {
+	private double getR(NextState ns, NextState nns, int action) {
 		if(nns.hasLost())
 			return P * LOST_REWARD;
 		else 
@@ -151,6 +151,7 @@ class LSPI {
 		return weights;
 	}
 
+	//TODO:????? why do we need to do this??
 	private void outputFinalWeight() {
 		for(int i = 0; i < K; i++) {
 			weights[i] = - Math.abs(weights[i]);
@@ -163,8 +164,9 @@ class LSPI {
 	private double[] updateWeights(NextState s, double[] w, NextState ns, NextState nns) {
 		double reward = 0;
 		double[][] A = new double[K][K];
+		
 		for(int j = 0; j < K; j++) {
-			A[j][j]=0.00001;
+			A[j][j]=0.00001; //an small number
 		}
 		double[][] B = new double[K][1];
 		
@@ -172,6 +174,7 @@ class LSPI {
 
 			generateRandomState(s);
 			
+			//to get summation of all the possible action and nextStates
 			for(int action = 0; action < s.legalMoves().length; action++) {
 
 				ns.copyState(s);
@@ -191,17 +194,23 @@ class LSPI {
 						
 						phi2 = Matrix.convertToColumnVector(ff.computeFeatureVector(nns));
 						phiSum = Matrix.matrixAdd(phiSum, phi2);
-						reward += getReward(ns, nns, action);
+						reward += getR(ns, nns, action);
 					}
-					double[][] tempSum = Matrix.multiplyByConstant(phiSum, GAMMA*P);
-					double[][] transposed = Matrix.transpose(Matrix.matrixSub(phi1, tempSum));
-					double[][] numerator = Matrix.matrixMulti(A, phi1);
 					
+					//find numerator
+					//As both GAMMA and P is constant
+					double[][] tempSum = Matrix.multiplyByConstant(phiSum, GAMMA*P);					
+					double[][] transposed = Matrix.transpose(Matrix.matrixSub(phi1, tempSum));
+					double[][] numerator = Matrix.matrixMulti(A, phi1);					
 					numerator = Matrix.matrixMulti(numerator, transposed);
 					numerator = Matrix.matrixMulti(numerator, A);
+					
+					//find denominator
 					double[][] temp = Matrix.matrixMulti(transposed, A);
 					temp = Matrix.matrixMulti(temp, phi1);
+					//temp is a 1*1 array
 					double denominator = 1.0 + temp[0][0];
+					
 					A = Matrix.matrixSub(A, Matrix.multiplyByConstant(numerator, 1.0 / denominator));
 					B = Matrix.matrixAdd(B, Matrix.multiplyByConstant(phi1, reward));
 				}
