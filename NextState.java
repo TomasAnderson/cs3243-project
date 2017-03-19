@@ -72,7 +72,9 @@ class NextState extends State {
     public int[] getTop() { return top; }
 
     public void setTopDeep(int[] newTop) {
+    	//System.out.println(Arrays.toString(newTop));
         this.top = Arrays.copyOf(newTop, newTop.length);
+        
     }
 
     public int getAction() { return action; }
@@ -146,4 +148,9 @@ class NextState extends State {
 
         return true;
     }
+
+	public void print() {
+		// TODO Auto-generated method stub
+		System.out.println(Arrays.toString(top));
+	}
 }
