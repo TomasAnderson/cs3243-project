@@ -13,7 +13,6 @@ public class PlayerSkeleton {
 			-47198.39106032252
 			
 			//8 feature functions
-
 	};
 	
 	private NextState nextstate;
@@ -69,7 +68,6 @@ public class PlayerSkeleton {
 			String input = sc.nextLine();
 			Learner learner = new Learner(input.split(" "));
 			learner.learn();
-			System.out.println("done");
 		}
 	}
 	

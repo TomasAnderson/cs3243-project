@@ -60,6 +60,7 @@ public class Learner {
 				bw.write(weight.toString());
 				bw.newLine();
 			}
+			System.out.println("final weight written to " + NEWFILENAME);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -145,21 +146,9 @@ class LSPI {
 			count++;
 			System.out.println(count+PROCESS); //print out current stage
 		}
-		
-		outputFinalWeight();
-		
+		System.out.println(Arrays.toString(weights));
 		return weights;
 	}
-
-	//TODO:????? why do we need to do this??
-	private void outputFinalWeight() {
-		for(int i = 0; i < K; i++) {
-			weights[i] = - Math.abs(weights[i]);
-		}
-		weights[1] = - weights[1];
-		System.out.println(Arrays.toString(weights));
-	}
-
 	
 	private double[] updateWeights(NextState s, double[] w, NextState ns, NextState nns) {
 		double reward = 0;
@@ -187,6 +176,7 @@ class LSPI {
 					double[][] phiSum = new double[K][1];
 					phi1 = Matrix.convertToColumnVector(ff.computeFeatureVector(ns));
 
+					//calculate summation of all the possibilities
 					for(int piece = 0; piece < N_PIECES; piece++) {
 						ns.setNextPiece(piece);
 						nns.copyState(ns);
@@ -214,10 +204,10 @@ class LSPI {
 					A = Matrix.matrixSub(A, Matrix.multiplyByConstant(numerator, 1.0 / denominator));
 					B = Matrix.matrixAdd(B, Matrix.multiplyByConstant(phi1, reward));
 				}
-			}
-			
-			w = Matrix.convertToArray(Matrix.matrixMulti(A, B));
+			}	
 		}
+		
+		w = Matrix.convertToArray(Matrix.matrixMulti(A, B));
 		return w;
 	}
 
