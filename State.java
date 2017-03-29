@@ -266,8 +266,7 @@ public class State {
 		label.line(0, 0, COLS, 0);
 		label.line(0, ROWS-1, COLS, ROWS-1);
 		
-		//show bricks
-				
+		//show bricks		
 		for(int c = 0; c < COLS; c++) {
 			for(int r = 0; r < top[c]; r++) {
 				if(field[r][c] != 0) {
