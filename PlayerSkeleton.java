@@ -32,6 +32,8 @@ public class PlayerSkeleton {
 			nextstate.makeMove(currentMove);
 			currentValue = featureFunction.computeValueOfState(nextstate, weights);
 
+			if (nextstate.hasLost()) continue; 
+			
 			if (currentValue > bestValue) {
 				bestMove = currentMove;
 				bestValue = currentValue;
