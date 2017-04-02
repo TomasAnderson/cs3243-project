@@ -1,6 +1,6 @@
 import java.util.Scanner;
 
-public class PlayerSkeleton {
+public class PlayerSkeleton implements Runnable{
 	private FeatureFunction featureFunction;
 	private static double[] weights = new double[] {
 			-18632.774652174616,
@@ -14,6 +14,7 @@ public class PlayerSkeleton {
 			
 			//8 feature functions
 	};
+	private static int NUMBEROFLEARNER = 4;
 	
 	private NextState nextstate;
 
@@ -46,22 +47,21 @@ public class PlayerSkeleton {
 		
 		System.out.println("Choose: 1. Play; 2. Learn");
 		Scanner sc = new Scanner(System.in);
-		
+
 		if(Integer.valueOf(sc.nextLine()) == 1) {
-			State s = new State();
-//			new TFrame(s);
-			PlayerSkeleton p = new PlayerSkeleton();
-			while(!s.hasLost()) {
-				s.makeMove(p.pickMove(s,s.legalMoves()));
-//				s.draw();
-//				s.drawNext(0,0);
-				try {
-					Thread.sleep(0);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
+			Thread[] threads = new Thread[NUMBEROFLEARNER ];
+			for (int i = 0; i < NUMBEROFLEARNER; i++) {
+				threads[i] = new Thread(new PlayerSkeleton());
+				threads[i].start();
 			}
-			System.out.println("You have completed "+s.getRowsCleared()+" rows.");
+
+			try {
+				for (Thread t: threads) {
+					t.join();
+				} 
+			}catch (InterruptedException e) {
+			}
+
 		}
 		
 		else {
@@ -71,6 +71,23 @@ public class PlayerSkeleton {
 			Learner learner = new Learner(input.split(" "));
 			learner.learn();
 		}
+	}
+
+	public void run() {
+		State s = new State();
+		//			new TFrame(s);
+		PlayerSkeleton p = new PlayerSkeleton();
+		while(!s.hasLost()) {
+			s.makeMove(p.pickMove(s,s.legalMoves()));
+			//				s.draw();
+			//				s.drawNext(0,0);
+			try {
+				Thread.sleep(0);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+		}
+		System.out.println("You have completed "+s.getRowsCleared()+" rows.");
 	}
 	
 }
