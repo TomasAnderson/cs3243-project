@@ -111,6 +111,9 @@ class LSPI {
 		for (currentMove=0;currentMove < s.legalMoves().length; currentMove++) {
 		    ns.copyState(s);
 			ns.makeMove(currentMove);
+			
+			if (ns.hasLost()) continue; 
+			
 			currentValue = ff.computeValueOfState(ns, w);
 
 			if (currentValue > bestValue) {
