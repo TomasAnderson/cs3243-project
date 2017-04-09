@@ -48,14 +48,15 @@ public class FeatureFunction {
         int action = s.getAction();
         int orient = legalMoves[action][State.ORIENT];
         int slot = legalMoves[action][State.SLOT];
-        int piece = s.getNextPiece();
+        int piece = s.getOriginalState().getNextPiece();
 
         double height = -1;
-        for (int i=0, col=slot; i<s.getpWidth()[piece][orient];i++,col++) {
-            height = Math.max(height, s.getTop()[col] - s.getpBottom()[piece][orient][i]);
+        for (int i=0, col=slot; i<s.getOriginalState().getpWidth()[piece][orient];i++,col++) {
+            height = Math.max(height, s.getOriginalState().getTop()[col] - s.getOriginalState().getpBottom()[piece][orient][i]);
         }
-        return height + s.getpHeight()[piece][orient] / 2.0;
+        return height + s.getOriginalState().getpHeight()[piece][orient] / 2.0;
     }
+
 
     private double feature2(NextState s) {
         return s.getRowsCleared() - s.getOriginalState().getRowsCleared() + 1;

@@ -86,7 +86,7 @@ class LSPI {
 	
 	FeatureFunction ff = new FeatureFunction();
 	
-	int limit = 10000;
+	int limit = 100000;
 	public static final int COLS = 10;
 	public static final int ROWS = 21;
 	public static final int N_PIECES = 7;
@@ -145,11 +145,16 @@ class LSPI {
 		//don't need to compare for the first iteration
 		while ((diff(weights,prevWeight)>EPS || count == 0) && count < 20) {			
 			prevWeight = Arrays.copyOf(weights, weights.length);
+			System.out.println(Arrays.toString(weights));
+			System.out.println(count+PROCESS); //print out current stage
 			weights = updateWeights(s, weights, ns, nns);
 			count++;
-			System.out.println(count+PROCESS); //print out current stage
 		}
-		System.out.println(Arrays.toString(weights));
+		for (int i = 0; i < K; i++) {
+			weights[i] = weights[i] < 0 ? weights[i] : -weights[i];
+		}
+		weights[1] = - weights[1];
+		System.out.println("Final Weight: " + Arrays.toString(weights));
 		return weights;
 	}
 	
@@ -158,13 +163,16 @@ class LSPI {
 		double[][] A = new double[K][K];
 		
 		for(int j = 0; j < K; j++) {
-			A[j][j]=0.00001; //an small number
+			A[j][j]=1.0/100000; //corresponding to the number of state
 		}
 		double[][] B = new double[K][1];
+		Generator gen = new Generator();
 		
 		for(int i = 0; i < limit; i++) {
 
-			generateRandomState(s);
+            do {
+                s = Generator.decodeState(gen.generateUniqueState());
+            } while (s == null);
 			
 			//to get summation of all the possible action and nextStates
 			for(int action = 0; action < s.legalMoves().length; action++) {
