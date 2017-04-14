@@ -491,9 +491,6 @@ import java.util.*;
 //}
 //
 //
-///**
-// * Created by nhan on 14/4/16.
-// */
 //class Generator {
 //    private HashSet<String> explored;
 //    private static final int  NUM_OF_ENCODED = 7;
@@ -720,9 +717,9 @@ class NextState extends State {
     public int[] getTop() { return top; }
 
     public void setTopDeep(int[] newTop) {
-    	
+
         this.top = Arrays.copyOf(newTop, newTop.length);
-        
+
     }
 
     public int getAction() { return action; }
@@ -948,16 +945,14 @@ class FeatureFunction {
 public class PlayerSkeleton{
 	private FeatureFunction featureFunction;
 	private static double[] weights = new double[] {
-			-18632.774652174616,
-			6448.762504425676,
-			-29076.013395444257,
-			-36689.271441668505,
-			-16894.091937650956,
-			-8720.173920864327,
-			-49926.16836221889,
-			-47198.39106032252
-			
-			//8 feature functions
+			-16442.074156262446,
+			6696.8428940551885,
+			-28190.894358102174,
+			-34818.68429996376,
+			-17374.73731900446,
+			-4867.585098512209,
+			-50817.08977970609,
+			-45345.976872643456
 	};
 
 	private NextState nextstate;
@@ -989,14 +984,14 @@ public class PlayerSkeleton{
 	
 	public static void main(String[] args) {
 		State s = new State();
-		//new TFrame(s);
+		new TFrame(s);
 		PlayerSkeleton p = new PlayerSkeleton();
 		while(!s.hasLost()) {
 			s.makeMove(p.pickMove(s,s.legalMoves()));
-			//s.draw();
-			//s.drawNext(0,0);
+			s.draw();
+			s.drawNext(0,0);
 			try {
-				Thread.sleep(0);
+				Thread.sleep(300);
 			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
